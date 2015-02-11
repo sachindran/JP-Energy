@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    
+        <!--link rel="stylesheet" type="text/css" href="css/index.css" /-->
+
+       
+    <link rel="stylesheet" href="themes/bluevoilet.min.css" />
+    <link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
+    <link rel="stylesheet" href="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    
+    <script src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    
+    <script language="javascript" type="text/javascript" src="js/jquery.jqplot.min.js"></script>
+    <link class="include" rel="stylesheet" type="text/css" href="css/jquery.jqplot.min.css" />
+    <link class="include" rel="stylesheet" type="text/css" href="css/ionicons.css" />
+    
+    <!-- Ignite UI Required Combined CSS Files -->
+    <link href="http://cdn-na.infragistics.com/igniteui/2014.2/latest/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" />
+    <link href="http://cdn-na.infragistics.com/igniteui/2014.2/latest/css/structure/infragistics.css" rel="stylesheet" />
+    
+    <!--CSS file specific for chart styling -->
+    <link href="http://cdn-na.infragistics.com/igniteui/2014.2/latest/css/structure/modules/infragistics.ui.chart.css" rel="stylesheet" />
+
+    <script src="http://modernizr.com/downloads/modernizr-latest.js"></script>
+    
+    
+    <!-- Ignite UI Required Combined JavaScript Files -->
+    <script src="http://cdn-na.infragistics.com/igniteui/2014.2/latest/js/infragistics.core.js"></script>
+    <script src="http://cdn-na.infragistics.com/igniteui/2014.2/latest/js/infragistics.dv.js"></script>
+    <script src="http://cdn-na.infragistics.com/igniteui/2014.2/latest/js/infragistics.lob.js"></script>
+    
+    <script type="text/javascript" charset="utf-8" src="js/index.js"></script> 
+    
+    
+<title>JP-Energy</title>
+</head>
+<body>
+    <div data-theme="a" id="loginPage" data-role="page">
+
+    <div data-role="header">
+        
+    </div>
+    <div data-role="content" style="background-image:url('img/bg/bg3.jpg'); height:600px;">   
+    <h1 align="center" style="color:white">JP-Energy </br>&</br> Optimization</h1>
+    <form id="loginForm">
+        <div data-role="fieldcontain" class="ui-hide-label">
+        <input type="text" name="username" id="username" value="" placeholder="Username" style="text-align:center" />
+        
+        <div>&nbsp</div>
+    
+        <input type="password" name="password" id="password" value=""   placeholder="Password" style="text-align:center"/>
+        <div>&nbsp</div>
+        </div>
+        <div>&nbsp</div>
+
+        <input onClick="handleLogin('Nor')" type="submit" value="Login" id="submitButton">
+    </form> 
+    <p id="test"></p>
+        <!--input type="button" onClick='changePage("#Consumption");' value="TEST"></a-->
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <h4>&copy; The KB Systems</h4>
+    </div>
+
+    </div>
+        <!--script type="text/javascript" src="cordova.js"></script-->
+        
+<div data-role="page" data-theme="b" id="Graphs">
+        <div data-role="header" style="overflow:hidden;">
+            <h1>JP Energy</h1>
+            <a href="#loginPage" id="conLogout" class="ui-btn-right ion-android-exit">&nbsp&nbsp&nbspLogout</a>
+            <!--button onClick="logout()" data-icon="home" id="Logout">Logout</button-->
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#" class="ui-state-persist icon ion-ios-pulse-strong" class="ui-btn-active">&nbsp&nbspGraphs</a></li>
+                    <li><a href="#Cost-Graphs" class="ion-social-usd" data-transition="pop">&nbsp&nbspCost Graphs</a></li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content"  style="background-image:url('img/bg/bg3.jpg');">
+            <div data-role="fieldcontain">
+                <a href="#graSearch" data-rel="popup" data-role="button" class="icon-right ion-search" data-position-to="window">&nbsp&nbsp&nbsp Quick Search</a>
+                <label for="graDis" class="select" align="center">District Name</label>
+                <select name="graDis" id="graDis">
+                <option>Choose District</option>
+                <option value="East Bank">East Bank</option>
+                <option value="West Bank">West Bank</option>
+                </select>
+                <div id="graOtherPorts">
+                </div>
+                <label for="graRoute" class="select" align="center">Route</label>
+                <select name="graRoute" id="graRoute">
+                <option>Choose Route</option>
+                </select>
+                <label for="graLiftSt" class="select" align="center">Lift Stations</label>
+                <select name="graLiftSt" id="graLiftSt">
+                <option>Choose Lift Station</option>
+                </select>
+                <label for="graPump" class="select" align="center">Pump</label>
+                <select name="graPump" multiple="multiple" id="graPump">
+                <option disabled selected value="">Choose Pump</option>
+                </select>
+                <label for="graVar" class="select" align="center">Variable</label>
+                <select name="graVar" id="graVar">
+                <option>Choose Variable</option>
+                <option value="flowrate_get">Flow Rate</option>
+                <option value="head_get">Head Rate</option>
+                <option value="runtime_get">Time Run</option>
+                <option value="amperage_get">Amperage</option>
+                <option value="ebill_get">Electricity Bill</option>
+                <option value="electricalworkdone_get">Electrical Work Done</option>
+                <option value="mechanicalworkdone_get">Mechanical Work Done</option>
+                <option value="costperwork">Cost Per Work</option>
+                <option value="pumpeffeciency_get">Pump Effeciency</option>
+                </select>
+                <div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <label for="grafromDate" class="ion-ios-calendar-outline" align="center">&nbsp&nbsp&nbsp&nbspFrom</label>
+                        <input id="grafromDate" type="date">
+                    </div>
+                    <div class="ui-block-b" align="center">
+                        <label for="gratoDate" class="ion-ios-calendar-outline">&nbsp&nbsp&nbsp&nbspTo</label>
+                        <input id="gratoDate" type="date">
+                    </div>
+                </div>
+                <!--div class="ui-grid-b" align="center">
+                    <fieldset data-role="controlgroup" data-type="horizontal" >
+                        <div class="ui-block-a" style="padding-top: 12px">
+                            <label for="conflipComp" align="center" style=" font-weight: bold;font-family:Trebuchet MS;font-size: 120%;">Toggle to compare&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+                        </div>
+                        <div class="ui-block-b" style="padding-top: 7px">
+                            <div  class="containing-element">
+                                <select name="con-flip-min" id="conflipComp" data-role="slider">
+                                    <option value="Self">Self</option>
+                                    <option value="Compare">Compare</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div!-->
+                <div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </div>
+                
+                <script type="text/javascript" src="http://www.igniteui.com/data-files/uk-france-population.js"></script>
+
+    
+    <style type="text/css">
+       
+        .labelCol
+        {
+            width: 110px;
+        }
+        
+       .slider
+        {
+            width: 80px;
+            height: 10px;
+            margin: 10px;
+        }
+        .selectionOptions
+        {
+            margin-bottom: 10px;   
+        }
+
+        td { vertical-align: top; }
+        .chartElement {
+            padding-bottom: 20px;
+        }
+    </style>
+    
+    <div id="graGraphCompOptions">
+    </div>
+    <div class="selectionOptions" align="center">
+       Series type
+        <select id="graSeriesType">
+            <option value="area">Area</option>
+            <option value="column">Column</option>
+            <option value="line" selected="selected">Line</option>
+            <option value="splineArea">Spline Area</option>
+            <option value="spline">Spline</option>
+            <option value="stepArea">Step Area</option>
+            <option value="stepLine">Step Line</option>
+            <option value="waterfall">Waterfall</option>
+            <option value="point">Point</option>
+        </select>
+        </div>
+    </div>
+    <button onClick="GetDataForGraph('gra')" value="Chart" class="ui-btn ui-shadow ui-corner-all ui-icon-home" id="conchartDisplay">Chart</button>
+
+    <div id="graSearch" data-role="popup" data-theme="a" class="ui-content ui-corner-all"">
+        <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+        <div data-role="header" style="overflow:hidden;">
+            <h1>Quick Search</h1>
+       </div>
+        <div data-role="fieldcontain" style="padding:30px" align="center"> 
+            <input id="graSeaLoc" data-type="search" class="ui-corner-all" placeholder="Enter Location">
+            <h3> OR </h3>
+            <input id="graSeaLif" data-type="search" class="ui-corner-all" placeholder="Enter Lift Station Id">
+            
+        </div>
+       <button onClick="search('gra')" value="Search" class="ui-btn ui-shadow ui-corner-all" id="conchartDisplay">Search</button>
+    </div>
+
+
+    <!-- Custom Tooltip Template -->
+    <script id="tooltipTemplate" type="text/x-jquery-tmpl">
+        <div style="color: #44ACD6">
+            <span>US </span><span>${item.Year}</span><br />
+            Total Energy: <span style="font-weight: bold">${item.UnitedStates}</span>
+        </div>
+    </script>
+
+
+    <table>
+        <tr>
+            <td id="graChart" class="chartElement" style="width:80% height:50%"/>      
+            
+        </tr>
+        <tr>
+            <td id="graLineLegend" style="float: center"/>
+        </tr>
+    </table>
+        <div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </div>
+        <!--div id="conHorizontalZoomSlider"><div-->
+        <input type="range" name="slider" id="graHorizontalZoomSlider" value="1" min="1" max="100"/>
+        
+            
+        </div>
+ 
+        <div data-role="footer" data-position="fixed">
+            <h3>&copy; The KB Systems</h3>
+        </div>
+    </div>
+        
+    
+
+<!-- Cost Graphs Page -->
+
+<div data-role="page" data-theme="b" id="Cost-Graphs">
+        <div data-role="header" style="overflow:hidden;">
+            <h1>JP Energy</h1>
+            <a href="#loginPage" id="conLogout" class="ui-btn-right ion-android-exit">&nbsp&nbsp&nbspLogout</a>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#Graphs" class="icon ion-ios-pulse-strong" data-transition="pop">&nbsp&nbspGraphs</a></li>
+                    <li><a href="#" class="ui-state-persist ui-btn-active ion-social-usd" >&nbsp&nbspCost Graphs</a></li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content"  style="background-image:url('img/bg/bg3.jpg');">
+            <div data-role="fieldcontain">
+                <a href="#cosSearch" data-rel="popup" data-role="button" class="icon-right ion-search" data-position-to="window">&nbsp&nbsp&nbsp Quick Search</a>
+                <label for="cosDis" class="select" align="center">District Name</label>
+                <select name="cosDis" id="cosDis">
+                <option>Choose District</option>
+                <option value="East Bank">East Bank</option>
+                <option value="West Bank">West Bank</option>
+                </select>
+                <div id="cosOtherPorts"> 
+                </div>
+                <label for="cosRoute" class="select" align="center">Route</label>
+                <select name="cosRoute" id="cosRoute">
+                <option>Choose Route</option>
+                </select>
+                <label for="cosLiftSt" class="select" align="center">Lift Stations</label>
+                <select name="cosLiftSt" id="cosLiftSt">
+                <option>Choose Lift Station</option>
+                </select>
+                <label for="cosPump" class="select" align="center">Pump</label>
+                <select name="cosPump" multiple="multiple" id="cosPump">
+                <option disabled selected value="">Choose Pump</option>
+                </select>
+                
+                <!--
+                <label for="cosVar" class="select" align="center">Variable</label>
+                <select name="cosVar" id="cosVar">
+                <option>Choose Variable</option>
+                <option value="flowrate_get">Flow Rate</option>
+                <option value="head_get">Head Rate</option>
+                <option value="runtime_get">Time Run</option>
+                <option value="amperage_get">Amperage</option>
+                <option value="ebill_get">Electricity Bill</option>
+                <option value="electricalworkdone_get">Electrical Work Done</option>
+                <option value="mechanicalworkdone_get">Mechanical Work Done</option>
+                <option value="costperwork">Cost Per Work</option>
+                <option value="pumpeffeciency_get">Pump Effeciency</option>
+                </select>
+                -->
+                
+                <div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <label for="cosfromDate" class="ion-ios-calendar-outline" align="center">&nbsp&nbsp&nbsp&nbspFrom</label>
+                        <input id="cosfromDate" type="date">
+                    </div>
+                    <div class="ui-block-b" align="center">
+                        <label for="costoDate" class="ion-ios-calendar-outline">&nbsp&nbsp&nbsp&nbspTo</label>
+                        <input id="costoDate" type="date">
+                    </div>
+                </div>
+                <!--div class="ui-grid-b" align="center">
+                    <fieldset data-role="controlgroup" data-type="horizontal" >
+                        <div class="ui-block-a" style="padding-top: 12px">
+                            <label for="conflipComp" align="center" style=" font-weight: bold;font-family:Trebuchet MS;font-size: 120%;">Toggle to compare&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+                        </div>
+                        <div class="ui-block-b" style="padding-top: 7px">
+                            <div  class="containing-element">
+                                <select name="con-flip-min" id="conflipComp" data-role="slider">
+                                    <option value="Self">Self</option>
+                                    <option value="Compare">Compare</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div!-->
+                <div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </div>
+                
+                <script type="text/javascript" src="http://www.igniteui.com/data-files/uk-france-population.js"></script>
+
+    
+    <style type="text/css">
+       
+        .labelCol
+        {
+            width: 110px;
+        }
+        
+       .slider
+        {
+            width: 80px;
+            height: 10px;
+            margin: 10px;
+        }
+        .selectionOptions
+        {
+            margin-bottom: 10px;   
+        }
+
+        td { vertical-align: top; }
+        .chartElement {
+            padding-bottom: 20px;
+        }
+    </style>
+    
+    <div id="cosGraphCompOptions">
+    </div>
+    <div class="selectionOptions" align="center">
+       Series type
+        <select id="cosSeriesType">
+            <option value="area">Area</option>
+            <option value="column">Column</option>
+            <option value="line" selected="selected">Line</option>
+            <option value="splineArea">Spline Area</option>
+            <option value="spline">Spline</option>
+            <option value="stepArea">Step Area</option>
+            <option value="stepLine">Step Line</option>
+            <option value="waterfall">Waterfall</option>
+            <option value="point">Point</option>
+        </select>
+        </div>
+    </div>
+    <button onClick="GetDataForGraph('cos')" value="Chart" class="ui-btn ui-shadow ui-corner-all ui-icon-home" id="conchartDisplay">Chart</button>
+
+    <div id="cosSearch" data-role="popup" data-theme="a" class="ui-content ui-corner-all"">
+        <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+        <div data-role="header" style="overflow:hidden;">
+            <h1>Quick Search</h1>
+       </div>
+        <div data-role="fieldcontain" style="padding:30px" align="center"> 
+            <input id="cosSeaLoc" data-type="search" class="ui-corner-all" placeholder="Enter Location">
+            <h3> OR </h3>
+            <input id="cosSeaLif" data-type="search" class="ui-corner-all" placeholder="Enter Lift Station Id">
+            
+        </div>
+       <button onClick="search('cos')" value="Search" class="ui-btn ui-shadow ui-corner-all" id="conchartDisplay">Search</button>
+    </div>
+
+
+    <!-- Custom Tooltip Template -->
+    <script id="tooltipTemplate" type="text/x-jquery-tmpl">
+        <div style="color: #44ACD6">
+            <span>US </span><span>${item.Year}</span><br />
+            Total Energy: <span style="font-weight: bold">${item.UnitedStates}</span>
+        </div>
+    </script>
+
+
+    <table>
+        <tr>
+            <td id="cosChart" class="chartElement" style="width:80% height:50%"/>      
+            
+        </tr>
+        <tr>
+            <td id="cosLineLegend" style="float: center"/>
+        </tr>
+    </table>
+        <div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </div>
+        <!--div id="conHorizontalZoomSlider"><div-->
+        <input type="range" name="slider" id="cosHorizontalZoomSlider" value="1" min="1" max="100"/>
+        
+            
+        </div>
+ 
+        <div data-role="footer" data-position="fixed">
+            <h3>&copy; The KB Systems</h3>
+        </div>
+</div>    
+    <!-- Don't touch this! -->
+        <script class="include" type="text/javascript" src="js/jquery.jqplot.min.js"></script>
+ 
+        <!-- Additional plugins go here -->
+ 
+        <script class="include" type="text/javascript" src="js/jqplot.barRenderer.min.js"></script>
+        <script class="include" type="text/javascript" src="js/jqplot.pieRenderer.min.js"></script>
+ 
+        <script class="include" type="text/javascript" src="js/jqplot.categoryAxisRenderer.min.js"></script>
+        <script class="include" type="text/javascript" src="js/jqplot.pointLabels.min.js"></script>
+        
+        <script type="text/javascript" src="js/jqplot.cursor.min.js"></script>
+        <script type="text/javascript" src="js/jqplot.dateAxisRenderer.min.js"></script>
+        
+        <script type="text/javascript" src="js/jqplot.logAxisRenderer.min.js"></script>
+        <script type="text/javascript" src="js/jqplot.canvasTextRenderer.min.js"></script>
+        <script type="text/javascript" src="js/jqplot.canvasAxisTickRenderer.min.js"></script>
+        <script type="text/javascript" src="js/jqplot.ohlcRenderer.min.js"></script>
+ 
+        <!-- End additional plugins -->
+    </body>
+</html>
