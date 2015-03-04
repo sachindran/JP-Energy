@@ -1,0 +1,455 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"val",
+				"value"
+			],
+			[
+				"tr",
+				"trigger"
+			],
+			[
+				"cha",
+				"change"
+			],
+			[
+				"va",
+				"val"
+			],
+			[
+				"op",
+				"option	Tag"
+			],
+			[
+				"on",
+				"onclick	Attr"
+			],
+			[
+				"d",
+				"districts"
+			],
+			[
+				"usern",
+				"UserName"
+			],
+			[
+				"re",
+				"refresh"
+			],
+			[
+				"GetDataforGraphEM",
+				"GetDataforGraphEmiWas"
+			],
+			[
+				"subCat",
+				"subCatId"
+			],
+			[
+				"subc",
+				"subCatId"
+			],
+			[
+				"v",
+				"val"
+			],
+			[
+				"json",
+				"jsonText"
+			],
+			[
+				"fun",
+				"function"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 12712,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "/*\n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * \"License\"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n * http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n */\nvar app = {\n    // Application Constructor\n    initialize: function() {\n        this.bindEvents();\n    },\n    // Bind Event Listeners\n    //\n    // Bind any events that are required on startup. Common events are:\n    // 'load', 'deviceready', 'offline', and 'online'.\n    bindEvents: function() {\n        document.addEventListener('deviceready', this.onDeviceReady, false);\n        $(document).on(\"pageshow\",\"#loginPage\",function(){ // When entering pagetwo\n            loginInit();\n        });\n        $(\"#graDis\").change(function(e){\n            getRotueDetails();\n        });\n    },\n    // deviceready Event Handler\n    //\n    // The scope of 'this' is the event. In order to call the 'receivedEvent'\n    // function, we must explicitly call 'app.receivedEvent(...);'\n    onDeviceReady: function() {\n        app.receivedEvent('deviceready');\n    },\n    // Update DOM on a Received Event\n    receivedEvent: function(id) {\n        \n\n        console.log('Received Event: ' + id);\n    }\n};\n\napp.initialize();\n\nfunction changePage(page){\n        $(page).bind(\"callback\", function(e, args) {\n            alert(args.mydata);\n        });\n        $.mobile.changePage( $(page), \"pop\", true, true);\n        $(\"page\").trigger(\"callback\");\n    }\nfunction handleLogin(type) {\n        var form = $(\"#loginForm\");  \n        //$(\"#test\").text(\"handleLogin hit\");\n        //disable the button so we can't resubmit while we wait\n        if(type==\"Nor\")\n        {\n            $(\"#submitButton\").button('disable');\n        }\n        var u = $(\"#username\", form).val();\n        var p = $(\"#password\", form).val();\n        console.log(\"click\");\n        if(u != '' && p!= '') {\n            var jsonText = JSON.stringify({Username : u,Password :p});\n            $.ajax({\n                type: \"POST\",\n                url: \"http://thekbsystems.com/JPEOpti/JPOpti.asmx/ValidateUser\", // add web service Name and web service Method Name\n                data: jsonText,  //web Service method Parameter Name and ,user Input value which in Name Variable.\n                contentType: \"application/json; charset=utf-8\",\n                dataType: \"json\",\n                success: function (response)\n                    {\n                    if(response.d==\"A\" || response.d==\"U\")\n                        {\n                            window.localStorage[\"username\"] = u;\n                            window.localStorage[\"password\"] = p; \n                            changePage(\"#Graphs\");\n                            window.localStorage[\"userId\"] = response;\n                        }\n                        else\n                        {\n                            alert(\"failed login\");\n                            $(\"#submitButton\").button('enable');\n                        }\n                    },\n                error: function(xhr, textStatus, error){\n                    console.log(xhr.statusText);\n                    console.log(textStatus);\n                    console.log(error);\n                    $(\"#submitButton\").button('enable');\n                    alert(\"Login Failed\");\n                    }      \n            });\n        } else {\n            alert(\"You must enter a username and password\", function() {});\n            $(\"#submitButton\").removeAttr(\"disabled\");\n        }\n        return false;\n    }\n$(function(ready){\n    $(\"#graDis\").change(function(e)\n        {\n            $('#graRoute')\n            .find('option')\n            .remove()\n            .end()\n            .append('<option selected=\"selected\">Choose Route</option>');\n            $( \"#graRoute\" ).val(\"Choose Route\").change();\n            var district = $(\"#graDis\").val();\n            var jsonText = JSON.stringify({district : district});\n            $.ajax({\n                type: \"POST\",\n                url: \"http://thekbsystems.com/JPEOpti/JPOpti.asmx/GetRoutesbyDistrict\", // add web service Name and web service Method Name\n                data: jsonText,  //web Service method Parameter Name and ,user Input value which in Name Variable.\n                contentType: \"application/json; charset=utf-8\",\n                dataType: \"json\",\n                success: function (response)\n                    {\n                    if(response.d)\n                        {\n                            var data = JSON.parse(response.d);\n                            $.each(data, function(index, element)   {\n                                $(\"#graRoute\").append('<option value='+element.Ls_Route+'>'+element.Ls_Route+'</option>');\n                            });\n                            //alert(response.d.portId);\n                            //changePage(\"#Consumption\");\n                            //window.localStorage[\"userId\"] = response;\n                        }\n                    },\n                error: function (xhr, ajaxOptions, thrownError)\n                    {\n                        alert(xhr.status);\n                        alert(ajaxOptions);\n                        alert(thrownError);\n                    }\n            }); \n        });\n});\n$(function(ready){\n    $(\"#graRoute\").change(function(e)\n        {\n            $('#graLiftSt')\n            .find('option')\n            .remove()\n            .end()\n            .append('<option>Choose Lift Station</option>');\n            $( \"#graLiftSt\" ).val(\"Choose Lift Station\").change();\n            var route = $(\"#graRoute\").val();\n            var jsonText = JSON.stringify({route : route});\n            $.ajax({\n                type: \"POST\",\n                url: \"http://thekbsystems.com/JPEOpti/JPOpti.asmx/GetLiftStationsByRoute\", // add web service Name and web service Method Name\n                data: jsonText,  //web Service method Parameter Name and ,user Input value which in Name Variable.\n                contentType: \"application/json; charset=utf-8\",\n                dataType: \"json\",\n                success: function (response)\n                    {\n                    if(response.d)\n                        {\n                            var data = JSON.parse(response.d);\n                            $.each(data, function(index, element)   {\n                                $(\"#graLiftSt\").append('<option value='+element.Ls_Id+'>'+element.Ls_Id+'</option>');\n                            });\n                            //alert(response.d.portId);\n                            //changePage(\"#Consumption\");\n                            //window.localStorage[\"userId\"] = response;\n                        }\n                    },\n                error: function (xhr, ajaxOptions, thrownError)\n                    {\n                        alert(xhr.status);\n                        alert(ajaxOptions);\n                        alert(thrownError);\n                    }\n            }); \n        });\n});\n$(function(ready){\n    $(\"#graLiftSt\").change(function(e)\n        {\n            $('#graPump')\n            .find('option')\n            .remove()\n            .end()\n            .append('<option disabled selected value=\"\">Choose Pump</option>');\n            $( \"#graPump\" ).val(\"Choose Pump\").change();\n            var lift = $(\"#graLiftSt\").val();\n            var jsonText = JSON.stringify({liftstationId : lift});\n            $.ajax({\n                type: \"POST\",\n                url: \"http://thekbsystems.com/JPEOpti/JPOpti.asmx/GetPumpsByLiftStation\", // add web service Name and web service Method Name\n                data: jsonText,  //web Service method Parameter Name and ,user Input value which in Name Variable.\n                contentType: \"application/json; charset=utf-8\",\n                dataType: \"json\",\n                success: function (response)\n                    {\n                    if(response.d)\n                        {\n                            var data = JSON.parse(response.d);\n                            $.each(data, function(index, element)   {\n                                $(\"#graPump\").append('<option value='+element.P_Id+'>'+element.P_Id+'</option>');\n                            });\n                            //alert(response.d.portId);\n                            //changePage(\"#Consumption\");\n                            //window.localStorage[\"userId\"] = response;\n                        }\n                    },\n                error: function (xhr, ajaxOptions, thrownError)\n                    {\n                        alert(xhr.status);\n                        alert(ajaxOptions);\n                        alert(thrownError);\n                    }\n            }); \n        });\n});\n\nfunction GetDataForGraph()\n{\n    if((graphDataValidation(\"gra\")==true))\n        {\n            var pumps = $(\"#graPump\").val() || [];\n            var pumpsList = \"\";\n            if(pumps.length>1)\n            {\n                for(var i=0;i<pumps.length;i++)\n                {\n                    if(i==(pumps.length-1))\n                    {\n                        pumpsList += pumps[i];\n                    }\n                    else\n                    {\n                        pumpsList += pumps[i]+\",\";\n                    }\n                }\n            }\n            else\n            {\n                pumpsList = pumps[0]+\",\";\n            }\n            var fromDate = ($(\"#grafromDate\").val()).split(\"-\");\n            var toDate = ($(\"#gratoDate\").val()).split(\"-\");\n            var varSelected = $(\"#graVar\").val();\n            var jsonText1 = JSON.stringify({frommonth: fromDate[1],fromyear:fromDate[0],tomonth:toDate[1],toyear:toDate[0],SelectedValue:varSelected,pumps:pumpsList});\n            $.ajax({\n                    type: \"POST\",\n                    url: \"http://thekbsystems.com/JPEOpti/JPOpti.asmx/BindGraphData\", // add web service Name and web service Method Name\n                    data: jsonText1,  //web Service method Parameter Name and ,user Input value which in Name Variable.\n                    contentType: \"application/json; charset=utf-8\",\n                    dataType: \"json\",\n                    success: function (response)\n                        {\n                        if(response.d)\n                            {\n                                var data = JSON.parse(response.d);\n                                /*$.each(data, function(index, element)     {\n                                        $(\"#conCategory\").append('<option value='+element.categoryId+'>'+element.categoryName+'</option>');\n                                    });*/\n                                //alert(response.d.portId);\n                                //changePage(\"#Consumption\");\n                                //window.localStorage[\"userId\"] = response;\n                                if(data.length>0)\n                                {\n                                    //igniteChart(data,otherPorts,numOfPorts,catId);\n                                }\n                                else\n                                {\n                                    return data;\n                                }\n                            }\n                        },\n                    error: function (xhr, ajaxOptions, thrownError)\n                        {\n                            alert(xhr.status);\n                            alert(ajaxOptions);\n                            alert(thrownError);\n                            alert(\"Data unavailable\");\n                        }\n                });\n        }\n    else\n    {\n        if(validDates == false)\n            {\n                alert(\"Enter Valid dates\");\n            }\n            else\n            {\n                \n            }\n    }    \n}\nfunction igniteChartGraCos(rawData,pumpIds,numOfPumps,varId,Page)\n    {\n            $(function () {\n                $(\"#\"+Page+\"Chart\").igDataChart();\n                $(\"#\"+Page+\"Chart\").igDataChart( \"destroy\" );\n                $(\"#\"+Page+\"HorizontalZoomSlider\").val(1);\n                $(\"#\"+Page+\"HorizontalZoomSlider\").slider('refresh');\n                \n                var tempNumOfPumps = numOfPumps;\n                var graphData = [];\n                var avgData = [];\n                var maxData = [];\n                var minData = [];\n                var graAvgSeriesSet = false;\n                var graMinSeriesSet = false;\n                var graMaxSeriesSet = false;\n                var cosAvgSeriesSet = false;\n                var cosMinSeriesSet = false;\n                var cosMaxSeriesSet = false;\n                var avg = rawData[0].Column1;\n                var monthsCount = (rawData.length)/numOfPumps;\n                var startDate = getMonth(rawData[0].Date);\n                var endDate;\n                var varName =  $(\"#\"+Page+\"Var option[value='\"+varId+\"']\").text();\n                var marker = \"none\";\n                var thickness = 5;\n                var seriesType = $(\"#\"+Page+\"SeriesType\").val();\n                if (seriesType == \"area\" ||\n                    seriesType == \"splineArea\" ||\n                    seriesType == \"column\" ||\n                    seriesType == \"waterfall\" ||\n                    seriesType == \"point\" ||\n                    seriesType == \"stepArea\") \n                    {\n                        thickness = 1;\n                    }\n                if (seriesType == \"point\") \n                    {\n                        marker = \"circle\";\n                    }\n                if(numOfPumps == 1)\n                {\n                    for(i=0;i<rawData.length;i++)\n                    {\n                        var portValue = \"Port\"+rawData[i].PumpID+\"Value\";\n                        graphData[i] = {Date: getMonth(rawData[i].Date)};\n                        graphData[i][portValue] = rawData[i].FlowRate;\n                        if(avg>rawData[i].Column1)\n                        {\n                            avg = rawData[i].Column1;\n                        }\n                    }\n                    endDate = getMonth(rawData[i-1].Date);\n                }\n                else\n                {\n                    for(i=0;i<monthsCount;i++)\n                        {\n                            graphData[i] = {Date: getMonth(rawData[i].Date)};\n                            //maxData[i] =  rawData[i].Column1;\n                            //minData[i] =  rawData[i].Column1;\n                        }\n                    i=0;\n                    while(i<rawData.length)\n                    {\n                        var portValue = \"Port\"+rawData[i].portId+\"Value\";\n                        for(j=0;j<monthsCount;j++)\n                        {\n                            /*if(i>=monthsCount)\n                            {\n                                if(maxData[j]<rawData[i].Column1)\n                                {\n                                    maxData[j] =  rawData[i].Column1;\n                                }\n                                if(minData[j]>rawData[i].Column1)\n                                {\n                                    minData[j] =  rawData[i].Column1;\n                                }\n                            }*/\n                            graphData[j][portValue] = rawData[i].FlowRate;\n                            /*if(avg>rawData[i].Column1)\n                            {\n                                avg = rawData[i].Column1;\n                            }*/\n                            i++;\n                        }\n                    }\n                    /*for(j=0;j<monthsCount;j++)\n                        {\n                            graphData[j][\"min\"] = minData[j];\n                            graphData[j][\"max\"] = maxData[j];\n                            graphData[j][\"avg\"] = (maxData[j] + minData[j])/2;\n                        }*/\n                    endDate = getMonth(rawData[i-1].Date);\n                }\n                var series = [];\n                for(i=0;i<numOfPumps;i++)\n                {\n                    var portId = portIds[i];\n                    var portName;\n                    var portValue = \"Port\"+portId+\"Value\";\n                    /*if(i!=(numOfPorts-1))\n                    {\n                        portName = $(\"#\"+Page+\"otherPortsSel option[value='\"+portId+\"']\").text();\n                    }\n                    else\n                    {\n                        portName = $(\"#\"+Page+\"Port-name option[value='\"+portId+\"']\").text();\n                    }*/\n                    series[i]= {\n                                name: portId,\n                                    type: $(\"#\"+Page+\"SeriesType\").val(),\n                                    title: portId,\n                                    xAxis: \"DateAxis\",\n                                    yAxis: \"CatAxis\",\n                                    valueMemberPath: portValue,\n                                    markerType: marker,\n                                    isTransitionInEnabled: true,\n                                    isHighlightingEnabled: true,\n                                    thickness: thickness\n                                }\n                }\n                /*i--;\n                if($(\"#\"+Page+\"graphCompOptions-max\").is(':checked'))\n                {\n                    series[++i]= {\n                                name: \"Maximum\",\n                                    type: $(\"#\"+Page+\"SeriesType\").val(),\n                                    title: \"Max\",\n                                    xAxis: \"DateAxis\",\n                                    yAxis: \"CatAxis\",\n                                    valueMemberPath: \"max\",\n                                    markerType: marker,\n                                    isTransitionInEnabled: true,\n                                    isHighlightingEnabled: true,\n                                    thickness: thickness\n                                }\n                    if(Page == \"emi\")\n                    {           \n                        emiMaxSeriesSet = true;\n                    }\n                    else\n                    {\n                        wasMaxSeriesSet = true;\n                    }   \n                }\n                if($(\"#\"+Page+\"graphCompOptions-min\").is(':checked'))\n                {\n                    series[++i]= {\n                                name: \"Minimum\",\n                                    type: $(\"#\"+Page+\"SeriesType\").val(),\n                                    title: \"Min\",\n                                    xAxis: \"DateAxis\",\n                                    yAxis: \"CatAxis\",\n                                    valueMemberPath: \"min\",\n                                    markerType: marker,\n                                    isTransitionInEnabled: true,\n                                    isHighlightingEnabled: true,\n                                    thickness: thickness\n                                }\n                    if(Page == \"emi\")\n                    {           \n                        emiMinSeriesSet = true;\n                    }\n                    else\n                    {\n                        wasMinSeriesSet = true;\n                    }\n                }\n                if($(\"#\"+Page+\"graphCompOptions-avg\").is(':checked'))\n                {\n                    series[++i]= {\n                                name: \"Average\",\n                                    type: $(\"#\"+Page+\"SeriesType\").val(),\n                                    title: \"Avg\",\n                                    xAxis: \"DateAxis\",\n                                    yAxis: \"CatAxis\",\n                                    valueMemberPath: \"avg\",\n                                    markerType: marker,\n                                    isTransitionInEnabled: true,\n                                    isHighlightingEnabled: true,\n                                    thickness: thickness\n                                }\n                    if(Page == \"emi\")\n                    {           \n                        emiAvgSeriesSet = true;\n                    }\n                    else\n                    {\n                        wasAvgSeriesSet = true;\n                    }\n                }*/\n                var data = [\n                    { \"CountryName\": \"China\", \"Pop1995\": 1216, \"Pop2005\": 1297, \"Pop2015\": 1361, \"Pop2025\": 1394 },\n                    { \"CountryName\": \"India\", \"Pop1995\": 920, \"Pop2005\": 1090, \"Pop2015\": 1251, \"Pop2025\": 1396 },\n                    { \"CountryName\": \"United States\", \"Pop1995\": 266, \"Pop2005\": 295, \"Pop2015\": 322, \"Pop2025\": 351 },\n                    { \"CountryName\": \"Indonesia\", \"Pop1995\": 197, \"Pop2005\": 229, \"Pop2015\": 256, \"Pop2025\": 277 },\n                    { \"CountryName\": \"Brazil\", \"Pop1995\": 161, \"Pop2005\": 186, \"Pop2015\": 204, \"Pop2025\": 218 }\n                ];\n\n                var title;\n                var subtitle\n                if(numOfPumps>1)\n                    {\n                        title = varName+\" Consumption in Ports\";\n                        subtitle = \"Graph from \"+startDate+\" to \"+endDate;\n                    }\n                else\n                    {\n                        title = varName+\" Consumption in Port\";\n                        subtitle = \"Graph from \"+startDate+\" to \"+endDate;\n                    }\n                $(\"#\"+Page+\"Chart\").igDataChart({\n                    legend: { element: Page+\"LineLegend\" },\n                    title: title,\n                    subtitle: subtitle,\n                    horizontalZoomable: true,\n                    verticalZoomable: true,\n                    dataSource: graphData,\n                    axes: [\n                        {\n                            name: \"DateAxis\",\n                            type: \"categoryX\",\n                            label: \"Date\"\n                        },\n                        {\n                            name: \"CatAxis\",\n                            type: \"numericY\", \n                            minimumValue: avg-1000,\n                            title: \"Units\",\n                        }\n                    ],\n                    series: series\n                        \n                });\n                $(\"#\"+Page+\"Chart\").igDataChart(\"resetZoom\");\n\n                $(\"#\"+Page+\"Chart\").igDataChart({defaultInteraction: \"dragPan\"});\n                \n                /*$(\"#\"+Page+\"SeriesType\").change(function (e) {\n                    $(\"#\"+Page+\"HorizontalZoomSlider\").val(1);\n                    $(\"#\"+Page+\"HorizontalZoomSlider\").slider('refresh');\n                \n                    var marker = \"none\";\n                    var thickness = 5,\n                    seriesType = $(this).val();\n                    if (seriesType == \"area\" ||\n                        seriesType == \"splineArea\" ||\n                        seriesType == \"column\" ||\n                        seriesType == \"waterfall\" ||\n                        seriesType == \"point\" ||\n                        seriesType == \"stepArea\") {\n                        thickness = 1;\n                    }\n                    if (seriesType == \"point\") {\n                        marker = \"circle\";\n                    }\n                    for(i=0;i<tempNumOfPumps;i++)\n                    {\n                        var portId = portIds[i];\n                        var portName;\n                        var portValue = \"Port\"+portId+\"Value\";\n                        if(i!=(tempNumOfPumps-1))\n                        {\n                            portName = $(\"#\"+Page+\"otherPortsSel option[value='\"+portId+\"']\").text();\n                        }\n                        else\n                        {\n                            portName = $(\"#\"+Page+\"Port-name option[value='\"+portId+\"']\").text();\n                        }\n                        try\n                        {\n                            $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: portName,remove: true}]);\n                        }\n                        catch(err)\n                        {\n                            portName = $(\"#\"+Page+\"Port-name option[value='\"+portId+\"']\").text();\n                            //$(\"#chart\").igDataChart(\"option\", \"series\", [{ name: portName,remove: true}]);\n                            //var pLen = portIds.length;\n                            //igniteChart(rawData,portIds[(pLen-1)],1,catId);\n                            GetDataforGraphEmiWas(Page);\n                            break;\n                        }\n                    }\n                    if(numOfPorts>1)\n                    {\n                        if(Page == \"emi\")\n                        {\n                            if(emiMaxSeriesSet)\n                            {\n                                $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Maximum\",remove: true}]);\n                                emiMaxSeriesSet = false;\n                            }\n                            if(emiMinSeriesSet)\n                            {\n                                $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Minimum\",remove: true}]);\n                                emiMinSeriesSet = false;\n                            }\n                            if(emiAvgSeriesSet)\n                            {\n                                $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Average\",remove: true}]);\n                                emiAvgSeriesSet = false;\n                            }\n                        }\n                        else\n                        {\n                            if(wasMaxSeriesSet)\n                            {\n                                $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Maximum\",remove: true}]);\n                                wasMaxSeriesSet = false;\n                            }\n                            if(wasMinSeriesSet)\n                            {\n                                $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Minimum\",remove: true}]);\n                                wasMinSeriesSet = false;\n                            }\n                            if(wasAvgSeriesSet)\n                            {\n                                $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Average\",remove: true}]);\n                                wasAvgSeriesSet = false;\n                            }\n                        }\n                    }\n                    for(i=0;i<numOfPumps;i++)\n                    {\n                        var portId = portIds[i];\n                        var portName;\n                        var portValue = \"Port\"+portId+\"Value\";\n                        if(i!=(numOfPumps-1))\n                        {\n                            portName = $(\"#\"+Page+\"otherPortsSel option[value='\"+portId+\"']\").text();\n                        }\n                        else\n                        {\n                            portName = $(\"#\"+Page+\"Port-name option[value='\"+portId+\"']\").text();\n                        }\n                        $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{\n                                    name: portName,\n                                    type: $(this).val(),\n                                    title: portName,\n                                    xAxis: \"DateAxis\",\n                                    yAxis: \"CatAxis\",\n                                    valueMemberPath: portValue,\n                                    markerType: marker,\n                                    isTransitionInEnabled: true,\n                                    isHighlightingEnabled: true,\n                                    thickness: thickness\n                                    }]);\n                    }\n                if($(\"#\"+Page+\"graphCompOptions-max\").is(':checked'))\n                {\n                    $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{\n                                name: \"Maximum\",\n                                    type: $(this).val(),\n                                    title: \"Max\",\n                                    xAxis: \"DateAxis\",\n                                    yAxis: \"CatAxis\",\n                                    valueMemberPath: \"max\",\n                                    markerType: marker,\n                                    isTransitionInEnabled: true,\n                                    isHighlightingEnabled: true,\n                                    thickness: thickness\n                                }]);\n                    if(Page == \"emi\")\n                    {           \n                        emiMaxSeriesSet = true;\n                    }\n                    else\n                    {\n                        wasMaxSeriesSet = true;\n                    }\n                }\n                if($(\"#\"+Page+\"graphCompOptions-min\").is(':checked'))\n                {\n                    $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{\n                                name: \"Minimum\",\n                                    type: $(this).val(),\n                                    title: \"Min\",\n                                    xAxis: \"DateAxis\",\n                                    yAxis: \"CatAxis\",\n                                    valueMemberPath: \"min\",\n                                    markerType: marker,\n                                    isTransitionInEnabled: true,\n                                    isHighlightingEnabled: true,\n                                    thickness: thickness\n                                }]);\n                    if(Page == \"emi\")\n                    {           \n                        emiMinSeriesSet = true;\n                    }\n                    else\n                    {\n                        wasMinSeriesSet = true;\n                    }\n                }\n                if($(\"#\"+Page+\"graphCompOptions-avg\").is(':checked'))\n                {\n                    $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{\n                                name: \"Average\",\n                                    type: $(this).val(),\n                                    title: \"Avg\",\n                                    xAxis: \"DateAxis\",\n                                    yAxis: \"CatAxis\",\n                                    valueMemberPath: \"avg\",\n                                    markerType: marker,\n                                    isTransitionInEnabled: true,\n                                    isHighlightingEnabled: true,\n                                    thickness: thickness\n                                }]);\n                    if(Page == \"emi\")\n                    {           \n                        emiAvgSeriesSet = true;\n                    }\n                    else\n                    {\n                        wasAvgSeriesSet = true;\n                    }\n                }   \n                $(\"#\"+Page+\"Chart\").igDataChart(\"resetZoom\");\n                });*/\n                $(\"#\"+Page+\"HorizontalZoomSlider\").change(function (e) {\n                    var val = $(\"#\"+Page+\"HorizontalZoomSlider\").val();\n                    val = Math.abs(val-101);\n                    val = val/100;\n                    $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"windowScaleVertical\", 1);\n                    $(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"windowScaleHorizontal\", val);\n                });\n            }); \n    }\nfunction graphDataValidation(Page)\n    {\n        if($(\"#\"+Page+\"fromDate\").val() != \"\")\n        {\n            var fromDate = ($(\"#\"+Page+\"fromDate\").val()).split(\"-\");\n            if($(\"#\"+Page+\"toDate\").val() != \"\")\n            {\n                var toDate = ($(\"#\"+Page+\"toDate\").val()).split(\"-\");\n                if(fromDate[0]<=toDate[0])\n                {\n                    if(fromDate[0]==toDate[0])\n                    {\n                        if(fromDate[1]<=toDate[1])\n                        {\n                            if(fromDate[1]==toDate[1])\n                            {\n                                if(fromDate[2]<=toDate[2])\n                                {\n                                    return true;\n                                }\n                                else\n                                {\n                                    return false;\n                                }\n                            }\n                            else\n                            {\n                                return true;\n                            }\n                        }\n                        else\n                        {\n                            return false;\n                        }\n                            \n                    }\n                    else\n                    {\n                        return true;\n                    }\n                }\n                else\n                {\n                    return false;\n                }\n            }\n            else\n            {\n                return false;\n            }\n        }\n        else\n        {\n            return false;\n        }\n    }\n\nfunction checkPreAuth() {\n        var form = $(\"#loginForm\");\n        if((window.localStorage[\"username\"] != undefined && window.localStorage[\"password\"] != undefined)&&(window.localStorage[\"username\"] != \"\" && window.localStorage[\"password\"] != \"\")) {\n            $(\"#username\", form).val(window.localStorage[\"username\"]);\n            $(\"#password\", form).val(window.localStorage[\"password\"]);\n            handleLogin(\"Pre\");\n        }\n    }\nfunction deviceReady() \n    {\n        $(\"#loginForm\").on(\"submit\",handleLogin);\n        //getPortNamesAndCat();\n        \n    }\nfunction loginInit()\n    {\n        $('#password').val(\"\");\n        $('#username').val(\"\");\n        $(\"#submitButton\").button('enable');\n        $(\"#submitButton\").removeClass('active');\n        $(\"#submitButton\").trigger(\"create\");\n    }   ",
+			"file": "js/index.js",
+			"file_size": 14813,
+			"file_write_time": 130663533000000000,
+			"settings":
+			{
+				"buffer_size": 34564,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "var pumps = $(\"#graPump\").val() || [];\nvar pumpsList = \"\";\nfor(var i=0;i<pumps.length;i++)\n		{\n			if(i==(pumps.length-1))\n			{\n				pumpsList += pumps[i];\n			}\n			else\n			{\n				pumpsList += pumps[i]+\",\";\n			}\n			\n		}\n\nDate: \"January2009\"\nFlowRate: 634\nLiftStation: \"D7-1\"\nPumpID: \"D7-1_Pump1_2HYD.\"",
+			"settings":
+			{
+				"buffer_size": 297,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "function igniteChartGraCos(rawData,pumpIds,numOfPumps,varId,Page)\n	{\n	        $(function () {\n				$(\"#\"+Page+\"Chart\").igDataChart();\n				$(\"#\"+Page+\"Chart\").igDataChart( \"destroy\" );\n				$(\"#\"+Page+\"HorizontalZoomSlider\").val(1);\n				$(\"#\"+Page+\"HorizontalZoomSlider\").slider('refresh');\n				\n				var tempNumOfPumps = numOfPumps;\n				var graphData = [];\n				var avgData = [];\n				var maxData = [];\n				var minData = [];\n				var graAvgSeriesSet = false;\n				var graMinSeriesSet = false;\n				var graMaxSeriesSet = false;\n				var cosAvgSeriesSet = false;\n				var cosMinSeriesSet = false;\n				var cosMaxSeriesSet = false;\n				var avg = rawData[0].Column1;\n				var monthsCount = (rawData.length)/numOfPumps;\n				var startDate = getMonth(rawData[0].Date);\n				var endDate;\n				var varName =  $(\"#\"+Page+\"Var option[value='\"+varId+\"']\").text();\n				var marker = \"none\";\n				var thickness = 5;\n				var	seriesType = $(\"#\"+Page+\"SeriesType\").val();\n				if (seriesType == \"area\" ||\n					seriesType == \"splineArea\" ||\n					seriesType == \"column\" ||\n					seriesType == \"waterfall\" ||\n					seriesType == \"point\" ||\n					seriesType == \"stepArea\") \n					{\n						thickness = 1;\n	                }\n				if (seriesType == \"point\") \n					{\n	                    marker = \"circle\";\n	                }\n				if(numOfPumps == 1)\n				{\n					for(i=0;i<rawData.length;i++)\n					{\n						var portValue = \"Port\"+rawData[i].PumpID+\"Value\";\n						graphData[i] = {Date: getMonth(rawData[i].Date)};\n						graphData[i][portValue] = rawData[i].FlowRate;\n						if(avg>rawData[i].Column1)\n						{\n							avg = rawData[i].Column1;\n						}\n					}\n					endDate = getMonth(rawData[i-1].Date);\n				}\n				else\n				{\n					for(i=0;i<monthsCount;i++)\n						{\n							graphData[i] = {Date: getMonth(rawData[i].Date)};\n							//maxData[i] =  rawData[i].Column1;\n							//minData[i] =  rawData[i].Column1;\n						}\n					i=0;\n					while(i<rawData.length)\n					{\n						var portValue = \"Port\"+rawData[i].portId+\"Value\";\n						for(j=0;j<monthsCount;j++)\n						{\n							/*if(i>=monthsCount)\n							{\n								if(maxData[j]<rawData[i].Column1)\n								{\n									maxData[j] =  rawData[i].Column1;\n								}\n								if(minData[j]>rawData[i].Column1)\n								{\n									minData[j] =  rawData[i].Column1;\n								}\n							}*/\n							graphData[j][portValue] = rawData[i].FlowRate;\n							/*if(avg>rawData[i].Column1)\n							{\n								avg = rawData[i].Column1;\n							}*/\n							i++;\n						}\n					}\n					/*for(j=0;j<monthsCount;j++)\n						{\n							graphData[j][\"min\"] = minData[j];\n							graphData[j][\"max\"] = maxData[j];\n							graphData[j][\"avg\"] = (maxData[j] + minData[j])/2;\n						}*/\n					endDate = getMonth(rawData[i-1].Date);\n				}\n				var series = [];\n				for(i=0;i<numOfPumps;i++)\n				{\n					var portId = portIds[i];\n					var portName;\n					var portValue = \"Port\"+portId+\"Value\";\n					/*if(i!=(numOfPorts-1))\n					{\n						portName = $(\"#\"+Page+\"otherPortsSel option[value='\"+portId+\"']\").text();\n					}\n					else\n					{\n						portName = $(\"#\"+Page+\"Port-name option[value='\"+portId+\"']\").text();\n					}*/\n					series[i]= {\n								name: portId,\n									type: $(\"#\"+Page+\"SeriesType\").val(),\n									title: portId,\n									xAxis: \"DateAxis\",\n									yAxis: \"CatAxis\",\n									valueMemberPath: portValue,\n									markerType: marker,\n	                    			isTransitionInEnabled: true,\n									isHighlightingEnabled: true,\n									thickness: thickness\n								}\n				}\n				/*i--;\n				if($(\"#\"+Page+\"graphCompOptions-max\").is(':checked'))\n				{\n					series[++i]= {\n								name: \"Maximum\",\n									type: $(\"#\"+Page+\"SeriesType\").val(),\n									title: \"Max\",\n									xAxis: \"DateAxis\",\n									yAxis: \"CatAxis\",\n									valueMemberPath: \"max\",\n									markerType: marker,\n	                    			isTransitionInEnabled: true,\n									isHighlightingEnabled: true,\n									thickness: thickness\n								}\n					if(Page == \"emi\")\n					{			\n						emiMaxSeriesSet = true;\n					}\n					else\n					{\n						wasMaxSeriesSet = true;\n					}	\n				}\n				if($(\"#\"+Page+\"graphCompOptions-min\").is(':checked'))\n				{\n					series[++i]= {\n								name: \"Minimum\",\n									type: $(\"#\"+Page+\"SeriesType\").val(),\n									title: \"Min\",\n									xAxis: \"DateAxis\",\n									yAxis: \"CatAxis\",\n									valueMemberPath: \"min\",\n									markerType: marker,\n	                    			isTransitionInEnabled: true,\n									isHighlightingEnabled: true,\n									thickness: thickness\n								}\n					if(Page == \"emi\")\n					{			\n						emiMinSeriesSet = true;\n					}\n					else\n					{\n						wasMinSeriesSet = true;\n					}\n				}\n				if($(\"#\"+Page+\"graphCompOptions-avg\").is(':checked'))\n				{\n					series[++i]= {\n								name: \"Average\",\n									type: $(\"#\"+Page+\"SeriesType\").val(),\n									title: \"Avg\",\n									xAxis: \"DateAxis\",\n									yAxis: \"CatAxis\",\n									valueMemberPath: \"avg\",\n									markerType: marker,\n	                    			isTransitionInEnabled: true,\n									isHighlightingEnabled: true,\n									thickness: thickness\n								}\n					if(Page == \"emi\")\n					{			\n						emiAvgSeriesSet = true;\n					}\n					else\n					{\n						wasAvgSeriesSet = true;\n					}\n				}*/\n				var data = [\n	                { \"CountryName\": \"China\", \"Pop1995\": 1216, \"Pop2005\": 1297, \"Pop2015\": 1361, \"Pop2025\": 1394 },\n	                { \"CountryName\": \"India\", \"Pop1995\": 920, \"Pop2005\": 1090, \"Pop2015\": 1251, \"Pop2025\": 1396 },\n	                { \"CountryName\": \"United States\", \"Pop1995\": 266, \"Pop2005\": 295, \"Pop2015\": 322, \"Pop2025\": 351 },\n	                { \"CountryName\": \"Indonesia\", \"Pop1995\": 197, \"Pop2005\": 229, \"Pop2015\": 256, \"Pop2025\": 277 },\n	                { \"CountryName\": \"Brazil\", \"Pop1995\": 161, \"Pop2005\": 186, \"Pop2015\": 204, \"Pop2025\": 218 }\n	            ];\n\n				var title;\n				var subtitle\n				if(numOfPumps>1)\n					{\n						title = varName+\" Consumption in Ports\";\n						subtitle = \"Graph from \"+startDate+\" to \"+endDate;\n					}\n				else\n					{\n						title = varName+\" Consumption in Port\";\n						subtitle = \"Graph from \"+startDate+\" to \"+endDate;\n					}\n				$(\"#\"+Page+\"Chart\").igDataChart({\n	                legend: { element: Page+\"LineLegend\" },\n	                title: title,\n	                subtitle: subtitle,\n	                horizontalZoomable: true,\n	                verticalZoomable: true,\n	                dataSource: graphData,\n	                axes: [\n	                    {\n	                        name: \"DateAxis\",\n	                        type: \"categoryX\",\n	                        label: \"Date\"\n	                    },\n	                    {\n	                        name: \"CatAxis\",\n	                        type: \"numericY\", \n	                        minimumValue: avg-1000,\n	                        title: \"Units\",\n	                    }\n	                ],\n	                series: series\n	                    \n	            });\n	            $(\"#\"+Page+\"Chart\").igDataChart(\"resetZoom\");\n\n				$(\"#\"+Page+\"Chart\").igDataChart({defaultInteraction: \"dragPan\"});\n	            \n				$(\"#\"+Page+\"SeriesType\").change(function (e) {\n	                $(\"#\"+Page+\"HorizontalZoomSlider\").val(1);\n					$(\"#\"+Page+\"HorizontalZoomSlider\").slider('refresh');\n				\n					var marker = \"none\";\n	                var thickness = 5,\n					seriesType = $(this).val();\n					if (seriesType == \"area\" ||\n	                    seriesType == \"splineArea\" ||\n	                    seriesType == \"column\" ||\n	                    seriesType == \"waterfall\" ||\n	                    seriesType == \"point\" ||\n	                    seriesType == \"stepArea\") {\n	                    thickness = 1;\n	                }\n	                if (seriesType == \"point\") {\n	                    marker = \"circle\";\n	                }\n					for(i=0;i<tempNumOfPorts;i++)\n					{\n						var portId = portIds[i];\n						var portName;\n						var portValue = \"Port\"+portId+\"Value\";\n						if(i!=(tempNumOfPorts-1))\n						{\n							portName = $(\"#\"+Page+\"otherPortsSel option[value='\"+portId+\"']\").text();\n						}\n						else\n						{\n							portName = $(\"#\"+Page+\"Port-name option[value='\"+portId+\"']\").text();\n						}\n						try\n						{\n							$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: portName,remove: true}]);\n						}\n						catch(err)\n						{\n							portName = $(\"#\"+Page+\"Port-name option[value='\"+portId+\"']\").text();\n							//$(\"#chart\").igDataChart(\"option\", \"series\", [{ name: portName,remove: true}]);\n							//var pLen = portIds.length;\n							//igniteChart(rawData,portIds[(pLen-1)],1,catId);\n							GetDataforGraphEmiWas(Page);\n							break;\n						}\n					}\n					/*if(numOfPorts>1)\n					{\n						if(Page == \"emi\")\n						{\n							if(emiMaxSeriesSet)\n							{\n								$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Maximum\",remove: true}]);\n								emiMaxSeriesSet = false;\n							}\n							if(emiMinSeriesSet)\n							{\n								$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Minimum\",remove: true}]);\n								emiMinSeriesSet = false;\n							}\n							if(emiAvgSeriesSet)\n							{\n								$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Average\",remove: true}]);\n								emiAvgSeriesSet = false;\n							}\n						}\n						else\n						{\n							if(wasMaxSeriesSet)\n							{\n								$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Maximum\",remove: true}]);\n								wasMaxSeriesSet = false;\n							}\n							if(wasMinSeriesSet)\n							{\n								$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Minimum\",remove: true}]);\n								wasMinSeriesSet = false;\n							}\n							if(wasAvgSeriesSet)\n							{\n								$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{ name: \"Average\",remove: true}]);\n								wasAvgSeriesSet = false;\n							}\n						}\n					}*/\n					for(i=0;i<numOfPumps;i++)\n					{\n						var portId = portIds[i];\n						var portName;\n						var portValue = \"Port\"+portId+\"Value\";\n						if(i!=(numOfPumps-1))\n						{\n							portName = $(\"#\"+Page+\"otherPortsSel option[value='\"+portId+\"']\").text();\n						}\n						else\n						{\n							portName = $(\"#\"+Page+\"Port-name option[value='\"+portId+\"']\").text();\n						}\n						$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{\n									name: portName,\n									type: $(this).val(),\n									title: portName,\n									xAxis: \"DateAxis\",\n									yAxis: \"CatAxis\",\n									valueMemberPath: portValue,\n									markerType: marker,\n	                    			isTransitionInEnabled: true,\n									isHighlightingEnabled: true,\n									thickness: thickness\n									}]);\n					}\n				if($(\"#\"+Page+\"graphCompOptions-max\").is(':checked'))\n				{\n					$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{\n								name: \"Maximum\",\n									type: $(this).val(),\n									title: \"Max\",\n									xAxis: \"DateAxis\",\n									yAxis: \"CatAxis\",\n									valueMemberPath: \"max\",\n									markerType: marker,\n	                    			isTransitionInEnabled: true,\n									isHighlightingEnabled: true,\n									thickness: thickness\n								}]);\n					if(Page == \"emi\")\n					{			\n						emiMaxSeriesSet = true;\n					}\n					else\n					{\n						wasMaxSeriesSet = true;\n					}\n				}\n				if($(\"#\"+Page+\"graphCompOptions-min\").is(':checked'))\n				{\n					$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{\n								name: \"Minimum\",\n									type: $(this).val(),\n									title: \"Min\",\n									xAxis: \"DateAxis\",\n									yAxis: \"CatAxis\",\n									valueMemberPath: \"min\",\n									markerType: marker,\n	                    			isTransitionInEnabled: true,\n									isHighlightingEnabled: true,\n									thickness: thickness\n								}]);\n					if(Page == \"emi\")\n					{			\n						emiMinSeriesSet = true;\n					}\n					else\n					{\n						wasMinSeriesSet = true;\n					}\n				}\n				if($(\"#\"+Page+\"graphCompOptions-avg\").is(':checked'))\n				{\n					$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"series\", [{\n								name: \"Average\",\n									type: $(this).val(),\n									title: \"Avg\",\n									xAxis: \"DateAxis\",\n									yAxis: \"CatAxis\",\n									valueMemberPath: \"avg\",\n									markerType: marker,\n	                    			isTransitionInEnabled: true,\n									isHighlightingEnabled: true,\n									thickness: thickness\n								}]);\n					if(Page == \"emi\")\n					{			\n						emiAvgSeriesSet = true;\n					}\n					else\n					{\n						wasAvgSeriesSet = true;\n					}\n				}	\n				$(\"#\"+Page+\"Chart\").igDataChart(\"resetZoom\");\n	            });\n				$(\"#\"+Page+\"HorizontalZoomSlider\").change(function (e) {\n					var val = $(\"#\"+Page+\"HorizontalZoomSlider\").val();\n					val = Math.abs(val-101);\n					val = val/100;\n					$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"windowScaleVertical\", 1);\n					$(\"#\"+Page+\"Chart\").igDataChart(\"option\", \"windowScaleHorizontal\", val);\n				});\n			});	\n	}",
+			"settings":
+			{
+				"buffer_size": 12559,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 147.0,
+		"selected_items":
+		[
+			[
+				"add",
+				"Project: Add Folder"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/sachin/Documents/Android_workspace/phonegap/JP-Energy/www/index.html",
+		"/Users/sachin/Documents/Android_workspace/phonegap/JP-Energy/www/js/index.js",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/js/services.js",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/templates/tab-chats.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/js/controllers.js",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/templates/tabs.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/templates/tab-graphs.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/js/app.js",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/index.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/scss/ionic.app.scss",
+		"/Users/sachin/Documents/Android_workspace/phonegap/testApp/www/index.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/templates/tab-dash.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/templates/tab-cost.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/templates/tab-friends.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/templates/tabs-cost.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/templates/tabs-graphs.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/lib/angular/bower.json",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/css/style.css",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/lib/core-component-page/core-component-page.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/lib/paper-button/paper-button.html",
+		"/Users/sachin/Documents/Android_workspace/ionic/JP-Energy/www/lib/polymer/layout.html",
+		"/Users/sachin/Documents/Android_workspace/phonegap/testApp/www/js/index.js"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"tempNumOfPorts",
+			"numOfPorts",
+			"catName",
+			"carName",
+			"portName",
+			" \n",
+			"consumption",
+			".css",
+			"KB",
+			"s/",
+			"<s/",
+			"<s",
+			"Waste",
+			"  ",
+			"bar",
+			":\n",
+			"date",
+			"dashboard",
+			"('",
+			"checkp",
+			"check",
+			"trigg",
+			"deviceReady",
+			"submitButton",
+			"lineLegend",
+			"graphCompOptions",
+			"MaxSeriesSet",
+			"GetDataforGraph",
+			"otherPortsSel",
+			"Category",
+			"conCategory",
+			"chart",
+			"igniteChartEmiWas",
+			"fromDate",
+			"Port-name",
+			"emiGetDataforGraph",
+			"hideOtherPorts",
+			"conGraphCompOptions",
+			"graphCompOptions",
+			"otherPortsSel",
+			"OtherPorts",
+			"graphCompOptions",
+			"otherPortsConDiv",
+			"hideOtherPorts",
+			"flipComp",
+			"conflipComp",
+			"remove",
+			"function",
+			"wasCategory",
+			"emiCategory",
+			"getport"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12712,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6081,
+								6087
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2061.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "js/index.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 34564,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								32073,
+								32073
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5962.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 297,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								237,
+								245
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12559,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								12559
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 45.0,
+						"translation.y": 5776.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.sftp":
+	{
+		"height": 0.0
+	},
+	"project": "index.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 224.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

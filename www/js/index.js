@@ -33,6 +33,8 @@ var app = {
         $("#graDis").change(function(e){
             getRotueDetails();
         });
+        $('#loadingDiv').hide();
+        
     },
     // deviceready Event Handler
     //
@@ -343,33 +345,82 @@ $(function(ready){
         });
 });
 
-function GetDataForGraph(page)
+function enePageDataCheck()
 {
-    if((graphDataValidation(page)==true))
+
+}
+function graCosDataCheck(page)
+{
+    if((page=="gra") && ($("#"+page+"Var").val() == "ebill_get") && ($("#"+page+"LiftSt").val() != "Choose Lift Station"))
+    {
+        return true;
+    }
+    else
+    {
+        var pumps = $("#"+page+"Pump").val() || [];
+        if(page =="gra")
         {
-            var pumps = $("#"+page+"Pump").val() || [];
-            var pumpsList = "";
-            if(pumps.length>1)
+            
+              if((pumps.length==0) || ($("#"+page+"Var").val() == "Choose Variable"))
+              {
+                    return false;
+              }
+              else
+              {
+                return true;
+              }
+        }
+        else if(page == "cos")
+        {   
+            if(pumps.length==0)
             {
-                for(var i=0;i<pumps.length;i++)
-                {
-                    if(i==(pumps.length-1))
-                    {
-                        pumpsList += pumps[i];
-                    }
-                    else
-                    {
-                        pumpsList += pumps[i]+",";
-                    }
-                }
-            }
+                return false;
+            } 
             else
             {
-                pumpsList = pumps[0]+",";
+                return true;
             }
-            var fromDate = ($("#"+page+"fromDate").val()).split("-");
-            var toDate = ($("#"+page+"toDate").val()).split("-");
-            var varSelected = $("#"+page+"Var").val();
+        }
+        else
+        {
+            return true;
+        }
+    }
+}
+function GetDataForGraph(page)
+{
+    var graphDataCheck = graphDataValidation(page);
+    if((graCosDataCheck(page)==true) && (graphDataCheck ==true))
+        {
+            if(page!="ene")
+            {
+                var pumps = $("#"+page+"Pump").val() || [];
+                var pumpsList = "";
+                if(pumps.length>1)
+                {
+                    for(var i=0;i<pumps.length;i++)
+                    {
+                        if(i==(pumps.length-1))
+                        {
+                            pumpsList += pumps[i];
+                        }
+                        else
+                        {
+                            pumpsList += pumps[i]+",";
+                        }
+                    }
+                }
+                else
+                {
+                    pumpsList = pumps[0]+",";
+                }
+            }
+            if(page!="ene")
+            {
+                var fromDate = ($("#"+page+"fromDate").val()).split("-");
+                var toDate = ($("#"+page+"toDate").val()).split("-");
+                var varSelected = $("#"+page+"Var").val();
+            }
             if(page == "cos")
             {
                 varSelected = "Cost";
@@ -378,15 +429,34 @@ function GetDataForGraph(page)
             var urlSelected;
             if(page == "gra")
             {
-                jsonText1 = JSON.stringify({frommonth: fromDate[1],fromyear:fromDate[0],tomonth:toDate[1],toyear:toDate[0],SelectedValue:varSelected,pumps:pumpsList});
-                urlSelected = "http://thekbsystems.com/JPEOpti/JPOpti.asmx/BindGraphData"; // add web service Name and web service Method Name
+                if(varSelected == "ebill_get")
+                {
+                    var lifSt = $("#"+page+"LiftSt").val();
+                    jsonText1 = JSON.stringify({frommonth: fromDate[1],fromyear:fromDate[0],tomonth:toDate[1],toyear:toDate[0],SelectedValue:varSelected,pumps:lifSt});
+                    urlSelected = "http://thekbsystems.com/JPEOpti/JPOpti.asmx/eneWebService"; // add web service Name and web service Method Name
+                }
+                else
+                {
+                    jsonText1 = JSON.stringify({frommonth: fromDate[1],fromyear:fromDate[0],tomonth:toDate[1],toyear:toDate[0],SelectedValue:varSelected,pumps:pumpsList});
+                    urlSelected = "http://thekbsystems.com/JPEOpti/JPOpti.asmx/BindGraphData"; // add web service Name and web service Method Name
+                }
+            }
+            else if(page == "ene")
+            {
+                var limit = $("#"+page+"Limit").val();
+                var year = $("#"+page+"Year").val();
+                var dis = $("#"+page+"Dis").val();
+                var cir = $("#"+page+"Sort").val();
+                
+                jsonText1 = JSON.stringify({limit: limit,year:year,district:dis,criteria:cir});
+                urlSelected = "http://thekbsystems.com/JPEOpti/JPOpti.asmx/EneBindGraphData"; // add web service Name and web service Method Name
             }
             else
             {
                 jsonText1 = JSON.stringify({frommonth: fromDate[1],fromyear:fromDate[0],tomonth:toDate[1],toyear:toDate[0],pumps:pumpsList});
                 urlSelected = "http://thekbsystems.com/JPEOpti/JPOpti.asmx/CostBindGraphData"; // add web service Name and web service Method Name
             }
-            
+
             $.ajax({
                     type: "POST",
                     url: urlSelected,
@@ -406,10 +476,85 @@ function GetDataForGraph(page)
                                 //window.localStorage["userId"] = response;
                                 if(data.length>0)
                                 {
-                                    igniteChart(data,pumps,pumps.length,varSelected,page);
+                                    var rawData = data;
+
+                                    if(page=="ene")
+                                    {
+                                        $("#eneLoadingDiv").css("display","inline");
+                                        var costSum = 0;
+                                        var eleSum = 0;
+                                        for(i=0;i<rawData.length;i++)
+                                        {
+                                            costSum += rawData[i]["Electricity_Cost_$"];
+                                            eleSum += rawData[i]["Energy_Consumption_KWH"];
+                                        }
+                                        jsonText1 = JSON.stringify({year:year,district:dis,criteria:cir});
+                                        urlSelected = "http://thekbsystems.com/JPEOpti/JPOpti.asmx/EneSumingData"; // add web service Name and web service Method Name
+                                        $.ajax({
+                                            type: "POST",
+                                            url: urlSelected,
+                                            data: jsonText1,  //web Service method Parameter Name and ,user Input value which in Name Variable.
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "json",
+                                            success: function (response)
+                                                {
+                                                if(response.d)
+                                                    {
+                                                        var data = JSON.parse(response.d);
+                                                        if(data.length>0)
+                                                        {
+                                                            if(page=="ene")
+                                                            {
+                                                                var ratio;
+                                                                if(cir=="cost")
+                                                                {
+                                                                    sum = data[0]["sum(Dl_ElectricityCost)"];
+                                                                    ratio = (costSum / sum) * 100;
+                                                                    //alert(sum);
+                                                                }
+                                                                else
+                                                                {    
+                                                                    sum = data[0]["sum(Dl_Energy)"];
+                                                                    ratio = (eleSum / sum) * 100;
+                                                                    //alert(sum);
+                                                                }
+                                                                drawEnePieChart(dis,limit,cir,costSum,eleSum,sum,ratio)
+                                                            }
+                                                            else
+                                                            {
+                                                                igniteChart(data,pumps,pumps.length,varSelected,page);
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            return data;
+                                                        }
+                                                    }
+                                                },
+                                            error: function (xhr, ajaxOptions, thrownError)
+                                                {
+                                                    alert(xhr.status);
+                                                    alert(ajaxOptions);
+                                                    alert(thrownError);
+                                                    alert("Data unavailable");
+                                                }
+                                        });
+                                    }
+                                    else
+                                    {
+                                        if($("#"+page+"Var").val() == "ebill_get")
+                                        {
+                                            igniteChart(data,pumps,1,varSelected,page);
+                                        }
+                                        else
+                                        {
+                                            igniteChart(data,pumps,pumps.length,varSelected,page);
+                                        }
+                                    }
                                 }
                                 else
                                 {
+                                    alert("Data unavailable");
                                     return data;
                                 }
                             }
@@ -425,19 +570,92 @@ function GetDataForGraph(page)
         }
     else
     {
-        if(validDates == false)
+        if(page == "ene")
+        {
+            alert("Enter Valid data");
+        }
+        else
+        {
+            if(graphDataCheck == false)
             {
                 alert("Enter Valid dates");
             }
             else
             {
-                
+                alert("Enter Valid data");
             }
+        }
     }    
 }
+function drawEnePieChart(dis,limit,cir,costSum,eleSum,sum,ratio)
+{
+    $("#eneLoadingDiv").css("display","none");
+    google.load("visualization", "1", {packages:["corechart"]});
 
+
+        var data2 = [
+          ['Task', 'Hours per Day'],
+          ['Work',     11],
+          ['Eat',      2],
+          ['Commute',  2],
+          ['Watch TV', 2],
+          ['Sleep',    7]
+        ];
+        var data1;
+        if(cir=="cost")
+        {
+            data1= [["Key","Value"],
+            ["Top "+limit+" Stations", costSum],
+            ["Remaining Stations",sum]];
+        }
+        else
+        {
+            data1= [["Key","Value"],
+            ["Top "+limit+" Stations", eleSum],
+            ["Remaining Stations",sum]];
+        }
+        
+        var data = google.visualization.arrayToDataTable(data1);
+        var title = dis;
+        if(cir == "cost")
+        {
+            title += " Cost Comparision";
+        }
+        else
+        {
+            title += " Energy Consumption Comparision";
+        }
+        var options = {
+          legend: 'center',  
+          title: title,
+          is3D: true,
+          backgroundColor: { fill:'transparent' }
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('eneChart'));
+
+        chart.draw(data, options);
+      
+}
 function graphDataValidation(Page)
     {
+        if(Page == "ene")
+        {
+            var limit = $("#"+Page+"Limit").val();
+            var year = $("#"+Page+"Year").val();
+            var dis = $("#"+Page+"Dis").val();
+            var cir = $("#"+Page+"Sort").val();
+            if((limit == "") || (year == "Choose Year") || (dis == "Choose District") || (cir == "Choose Criteria"))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+else
+{
         if($("#"+Page+"fromDate").val() != "")
         {
             var fromDate = ($("#"+Page+"fromDate").val()).split("-");
@@ -492,37 +710,36 @@ function graphDataValidation(Page)
             return false;
         }
     }
+    }
 function getVariableName(varSel)
     {
-        var returnText = $("#graVar option:selected").text();
-        returnText.replace(/ /g,'');
         if(varSel=="flowrate_get")
         {
-            return returnText;
+            return "FlowRate";
         }
         else if(varSel=="head_get")
         {
-            return returnText;
+            return "TotalHead";
         }
         else if(varSel=="runtime_get")
         {
-            return returnText;
+            return "Runtime";
         }
         else if(varSel=="amperage_get")
         {
-            return returnText;
+            return "CurrentFlow";
         }
         else if(varSel=="ebill_get")
         {
-            return returnText;
+            return "ElectricityCost";
         }
         else if(varSel=="electricalworkdone_get")
         {
-            return "electricalworkdone";
+            return "EnergyConsumed";
         }
         else if(varSel=="mechanicalworkdone_get")
         {
-            return "mechanicalworkdone";
+            return "WorkDone";
         }
         else if(varSel=="costperwork")
         {
@@ -530,9 +747,10 @@ function getVariableName(varSel)
         }
         else
         {
-            return "pumpeffeciency";
+            return "PumpEfficiency";
         }
     }
+
 function igniteChart(rawData,pumpIds,numOfPumps,varSel,Page)
     {
             $(function () {
@@ -541,12 +759,13 @@ function igniteChart(rawData,pumpIds,numOfPumps,varSel,Page)
                 $("#"+Page+"HorizontalZoomSlider").val(1);
                 $("#"+Page+"HorizontalZoomSlider").slider('refresh');
                 //var varSelName = getVariableName(varSel);
-                var varSelName = $("#"+Page+"Var option:selected").text();
-                varSelName = varSelName.replace(/ /g,'');
+                var varSelName = $("#"+Page+"Var option:selected").val();
+                varSelName = getVariableName(varSelName);
+                var varTitle = $("#"+Page+"Var option:selected").text();
                 if(Page == "cos")
                 {
                     varSelName = "cost";
-
+                    varTitle = "Cost";
                 }
                 var tempNumOfPorts = numOfPumps;
                 var graphData = [];
@@ -585,7 +804,15 @@ function igniteChart(rawData,pumpIds,numOfPumps,varSel,Page)
                 {
                     for(i=0;i<rawData.length;i++)
                     {
-                        var portValue = "Port"+rawData[i].PumpID+"Value";
+                        var portValue;
+                        if(varSel == "ebill_get")
+                        {
+                            portValue = "Port"+rawData[i].LiftStationID+"Value";
+                        }
+                        else
+                        {
+                            portValue = "Port"+rawData[i].PumpID+"Value";   
+                        }
                         graphData[i] = {Date: rawData[i].Date};
                         graphData[i][portValue] = rawData[i][varSelName];
                         if(avg>rawData[i][varSelName])
@@ -639,8 +866,18 @@ function igniteChart(rawData,pumpIds,numOfPumps,varSel,Page)
                 var series = [];
                 for(i=0;i<numOfPumps;i++)
                 {
-                    var portName = pumpIds[i];
-                    var portValue = "Port"+portName+"Value";
+                    var portName;
+                    var portValue;
+                    if(varSel == "ebill_get")
+                    {
+                        portName = $("#"+Page+"LiftSt").val();
+                        portValue = "Port"+$("#"+Page+"LiftSt").val()+"Value";
+                    }
+                    else
+                    {
+                        portName = pumpIds[i];
+                        portValue = "Port"+portName+"Value";
+                    }
                     series[i]= {
                                 name: portName,
                                     type: $("#"+Page+"SeriesType").val(),
@@ -739,11 +976,11 @@ function igniteChart(rawData,pumpIds,numOfPumps,varSel,Page)
                 var subtitle
                 if(numOfPumps>1)
                     {
-                        title = varSel+" Consumption in Pumps";
+                        title = varTitle+" in Pumps";
                     }
                 else
                     {
-                        title = varSel+" Consumption in Pump";
+                        title = varTitle+" in Pump";
                     }
                 $("#"+Page+"Chart").igDataChart({
                     legend: { element: Page+"LineLegend" },
@@ -791,9 +1028,18 @@ function igniteChart(rawData,pumpIds,numOfPumps,varSel,Page)
                     }
                     for(i=0;i<tempNumOfPorts;i++)
                     {
-                        var portName = pumpIds[i];
-                        var portValue = "Port"+portName+"Value";
-                        
+                        var portName;
+                        var portValue;
+                        if(varSel == "ebill_get")
+                        {
+                            portName = $("#"+Page+"LiftSt").val();
+                            portValue = "Port"+$("#"+Page+"LiftSt").val()+"Value";
+                        }
+                        else
+                        {
+                            portName = pumpIds[i];
+                            portValue = "Port"+portName+"Value";
+                        }
                         try
                         {
                             $("#"+Page+"Chart").igDataChart("option", "series", [{ name: portName,remove: true}]);
@@ -849,8 +1095,18 @@ function igniteChart(rawData,pumpIds,numOfPumps,varSel,Page)
                     }*/
                     for(i=0;i<numOfPumps;i++)
                     {
-                        var portName = pumpIds[i];
-                        var portValue = "Port"+portName+"Value";
+                        var portName;
+                        var portValue;
+                        if(varSel == "ebill_get")
+                        {
+                            portName = $("#"+Page+"LiftSt").val();
+                            portValue = "Port"+$("#"+Page+"LiftSt").val()+"Value";
+                        }
+                        else
+                        {
+                            portName = pumpIds[i];
+                            portValue = "Port"+portName+"Value";
+                        }
                         $("#"+Page+"Chart").igDataChart("option", "series", [{
                                     name: portName,
                                     type: $(this).val(),
@@ -973,7 +1229,7 @@ function search(page)
         lif = $("#"+page+"SeaLif").val();
         if(loc!='')
         {
-             alert("Values: "+loc+" "+lif);
+             //alert("Values: "+loc+" "+lif);
              $("#graSearch").popup("close");
              var jsonText = JSON.stringify({location : loc});
             $.ajax({
@@ -1031,6 +1287,12 @@ function search(page)
                             var data = JSON.parse(response.d);
                             if(data.length>0)
                             {
+                                $('#graLiftSt')
+                                    .find('option')
+                                    .remove()
+                                    .end();
+                                $("#graLiftSt").append('<option value='+lif+'>'+lif+'</option>');
+                                $("#graLiftSt").val($("#graLiftSt option:first").val()).change();
                                 $('#graPump')
                                     .find('option')
                                     .remove()

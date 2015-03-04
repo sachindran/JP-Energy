@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>CA446936-BC0E-4BE3-AD20-DE186F60EF67</string>
+	<key>IDESourceControlProjectName</key>
+	<string>JP-Energy</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>4955734B3589DA12C7C4C40EF1628B4C807E93E8</key>
+		<string>https://github.com/sachindran/JP-Energy.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>platforms/ios/JP-Energy.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>4955734B3589DA12C7C4C40EF1628B4C807E93E8</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/sachindran/JP-Energy.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>4955734B3589DA12C7C4C40EF1628B4C807E93E8</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>4955734B3589DA12C7C4C40EF1628B4C807E93E8</string>
+			<key>IDESourceControlWCCName</key>
+			<string>JP-Energy</string>
+		</dict>
+	</array>
+</dict>
+</plist>
