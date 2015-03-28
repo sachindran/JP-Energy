@@ -60,6 +60,31 @@ function changePage(page){
         $.mobile.changePage( $(page), "pop", true, true);
         $("page").trigger("callback");
     }
+function testWS()
+{
+    var jsonText = JSON.stringify({});
+            $.ajax({
+                type: "POST",
+                url: "http://www.thekbsystems.com/odms/WebService.asmx/GetDataFromLibrary", // add web service Name and web service Method Name
+                data: jsonText,  //web Service method Parameter Name and ,user Input value which in Name Variable.
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response)
+                    {
+                        if(response.d)
+                        {
+                            var data = JSON.parse(response.d);
+                        }          
+                    },
+                error: function(xhr, textStatus, error){
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                    $("#submitButton").button('enable');
+                    alert("Login Failed");
+                    }      
+            });
+}
 function handleLogin(type) {
         var form = $("#loginForm");  
         //$("#test").text("handleLogin hit");
@@ -1230,7 +1255,7 @@ function search(page)
         if(loc!='')
         {
              //alert("Values: "+loc+" "+lif);
-             $("#graSearch").popup("close");
+             $("#"+page+"Search").popup("close");
              var jsonText = JSON.stringify({location : loc});
             $.ajax({
                 type: "POST",
@@ -1245,14 +1270,14 @@ function search(page)
                             var data = JSON.parse(response.d);
                             if(data.length>0 && (!(data[0].hasOwnProperty('Error'))))
                             {
-                                $('#graLiftSt')
+                                $("#"+page+"LiftSt")
                                     .find('option')
                                     .remove()
                                     .end();
                                     $.each(data, function(index, element)   {
-                                        $("#graLiftSt").append('<option value='+element.Ls_Id+'>'+element.Ls_Id+'</option>');
+                                        $("#"+page+"LiftSt").append('<option value='+element.Ls_Id+'>'+element.Ls_Id+'</option>');
                                     });
-                                    $("#graLiftSt").val($("#graLiftSt option:first").val()).change();
+                                    $("#"+page+"LiftSt").val($("#"+page+"LiftSt option:first").val()).change();
                             }
                             else
                             {
@@ -1272,7 +1297,7 @@ function search(page)
         else if(lif!='')
         {
              //alert("Values: "+loc+" "+lif);
-             $("#graSearch").popup("close");
+             $("#"+page+"Search").popup("close");
              var jsonText = JSON.stringify({ liftStationId : lif});
              $.ajax({
                 type: "POST",
@@ -1287,18 +1312,18 @@ function search(page)
                             var data = JSON.parse(response.d);
                             if(data.length>0)
                             {
-                                $('#graLiftSt')
+                                $("#"+page+"LiftSt")
                                     .find('option')
                                     .remove()
                                     .end();
-                                $("#graLiftSt").append('<option value='+lif+'>'+lif+'</option>');
-                                $("#graLiftSt").val($("#graLiftSt option:first").val()).change();
-                                $('#graPump')
+                                $("#"+page+"LiftSt").append('<option value='+lif+'>'+lif+'</option>');
+                                $("#"+page+"LiftSt").val($("#graLiftSt option:first").val()).change();
+                                $("#"+page+"Pump")
                                     .find('option')
                                     .remove()
                                     .end();
                                 $.each(data, function(index, element)   {
-                                    $("#graPump").append('<option value='+element.Ls_Id+'>'+element.P_Id+'</option>');
+                                    $("#"+page+"Pump").append('<option value='+element.Ls_Id+'>'+element.P_Id+'</option>');
                                 });
                             }
                             else

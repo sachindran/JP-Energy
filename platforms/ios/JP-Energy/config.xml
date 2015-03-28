@@ -21,12 +21,28 @@
     </feature>
     <name>JP-Energy</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Mobile app of JP Energy Optimization to monitor real time data of various paramteres in Jefferson Parish County.
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="thekbsystems@gmail.com" href="http://www.thekbsystems.com/JPEOpti/Admin/DataDisplay.aspx">
+        The KB Systems
     </author>
     <content src="index.html" />
     <access origin="*" />
     <preference name="DisallowOverscroll" value="true" />
+    <preference name="StatusBarOverlaysWebView" value="true" />
+    <preference name="StatusBarBackgroundColor" value="#000000" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+    <icon gap:platform="ios" height="180" src="www/res/icon/ios/icon-60@3x.png" width="180" />
+    <icon gap:platform="ios" height="60" src="www/res/icon/ios/icon-60.png" width="60" />
+    <icon gap:platform="ios" height="120" src="www/res/icon/ios/icon-60@2x.png" width="120" />
+    <icon gap:platform="ios" height="29" src="www/res/icon/ios/icon-small.png" width="29" />
+    <icon gap:platform="ios" height="58" src="www/res/icon/ios/icon-small@2x.png" width="58" />
+    <icon gap:platform="ios" height="40" src="www/res/icon/ios/icon-small-40.png" width="40" />
+    <icon gap:platform="ios" height="80" src="www/res/icon/ios/icon-Small-40@2x.png" width="80" />
+    <gap:splash gap:platform="ios" height="480" src="www/res/screen/ios/Default.png" width="320" />
+    <gap:splash gap:platform="ios" height="960" src="www/res/screen/ios/Default@2x.png" width="640" />
+    <gap:splash gap:platform="ios" height="1136" src="www/res/screen/ios/Default-568h@2x~iphone.png" width="640" />
+    <gap:splash gap:platform="ios" height="1334" src="www/res/screen/ios/Default-667h.png" width="750" />
+    <gap:splash gap:platform="ios" height="2208" src="www/res/screen/ios/Default-736h.png" width="1242" />
+    <gap:splash gap:platform="ios" height="1242" src="www/res/screen/ios/Default-Landscape-736h.png" width="2208" />
 </widget>

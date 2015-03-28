@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03C6D2081AAA315400B636FF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03C6D2071AAA315400B636FF /* Images.xcassets */; };
+		03C6D20C1AAA43ED00B636FF /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 03C6D20E1AAA43ED00B636FF /* config.xml */; };
 		1D3623260D0F684500981E51 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
@@ -60,6 +62,23 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		03C6D1E91AAA273F00B636FF /* icon-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-60.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-60.png"; sourceTree = "<group>"; };
+		03C6D1EA1AAA273F00B636FF /* icon-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-60@2x.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-60@2x.png"; sourceTree = "<group>"; };
+		03C6D1EB1AAA273F00B636FF /* icon-60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-60@3x.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-60@3x.png"; sourceTree = "<group>"; };
+		03C6D1EC1AAA273F00B636FF /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-72.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-72.png"; sourceTree = "<group>"; };
+		03C6D1ED1AAA273F00B636FF /* icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-72@2x.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-72@2x.png"; sourceTree = "<group>"; };
+		03C6D1EE1AAA273F00B636FF /* icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-76.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-76.png"; sourceTree = "<group>"; };
+		03C6D1EF1AAA273F00B636FF /* icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-76@2x.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-76@2x.png"; sourceTree = "<group>"; };
+		03C6D1F01AAA273F00B636FF /* icon-small-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-small-40.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-small-40.png"; sourceTree = "<group>"; };
+		03C6D1F11AAA273F00B636FF /* icon-small-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-small-40@2x.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-small-40@2x.png"; sourceTree = "<group>"; };
+		03C6D1F21AAA273F00B636FF /* icon-small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-small-50.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-small-50.png"; sourceTree = "<group>"; };
+		03C6D1F31AAA273F00B636FF /* icon-small-50@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-small-50@2x.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-small-50@2x.png"; sourceTree = "<group>"; };
+		03C6D1F41AAA273F00B636FF /* icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-small.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-small.png"; sourceTree = "<group>"; };
+		03C6D1F51AAA273F00B636FF /* icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-small@2x.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon-small@2x.png"; sourceTree = "<group>"; };
+		03C6D1F61AAA273F00B636FF /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = ../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon.png; sourceTree = "<group>"; };
+		03C6D1F71AAA273F00B636FF /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon@2x.png"; path = "../../../../../../../../../Downloads/54f9e525a3277/app/assets/iphone/icon@2x.png"; sourceTree = "<group>"; };
+		03C6D2071AAA315400B636FF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "JP-Energy/Images.xcassets"; sourceTree = SOURCE_ROOT; };
+		03C6D20D1AAA43ED00B636FF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = en; path = en.lproj/config.xml; sourceTree = "<group>"; };
 		1D3623240D0F684500981E51 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* JP-Energy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "JP-Energy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,7 +120,6 @@
 		D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
 		EB87FDF21871DA7A0020F90C /* merges */ = {isa = PBXFileReference; lastKnownFileType = folder; name = merges; path = ../../merges; sourceTree = "<group>"; };
 		EB87FDF31871DA8E0020F90C /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../../www; sourceTree = "<group>"; };
-		EB87FDF41871DAF40020F90C /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = ../../config.xml; sourceTree = "<group>"; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "JP-Energy/config.xml"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -144,7 +162,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				EB87FDF41871DAF40020F90C /* config.xml */,
+				03C6D20E1AAA43ED00B636FF /* config.xml */,
 				EB87FDF31871DA8E0020F90C /* www */,
 				EB87FDF21871DA7A0020F90C /* merges */,
 				EB87FDF11871DA420020F90C /* Staging */,
@@ -172,6 +190,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				03C6D2071AAA315400B636FF /* Images.xcassets */,
 				308D052D1370CCF300D202BF /* icons */,
 				308D05311370CCF300D202BF /* splash */,
 				8D1107310486CEB800E47090 /* JP-Energy-Info.plist */,
@@ -209,6 +228,21 @@
 		308D052D1370CCF300D202BF /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				03C6D1E91AAA273F00B636FF /* icon-60.png */,
+				03C6D1EA1AAA273F00B636FF /* icon-60@2x.png */,
+				03C6D1EB1AAA273F00B636FF /* icon-60@3x.png */,
+				03C6D1EC1AAA273F00B636FF /* icon-72.png */,
+				03C6D1ED1AAA273F00B636FF /* icon-72@2x.png */,
+				03C6D1EE1AAA273F00B636FF /* icon-76.png */,
+				03C6D1EF1AAA273F00B636FF /* icon-76@2x.png */,
+				03C6D1F01AAA273F00B636FF /* icon-small-40.png */,
+				03C6D1F11AAA273F00B636FF /* icon-small-40@2x.png */,
+				03C6D1F21AAA273F00B636FF /* icon-small-50.png */,
+				03C6D1F31AAA273F00B636FF /* icon-small-50@2x.png */,
+				03C6D1F41AAA273F00B636FF /* icon-small.png */,
+				03C6D1F51AAA273F00B636FF /* icon-small@2x.png */,
+				03C6D1F61AAA273F00B636FF /* icon.png */,
+				03C6D1F71AAA273F00B636FF /* icon@2x.png */,
 				30C1856519D5FC0A00212699 /* icon-60@3x.png */,
 				7E7966D41810823500FA85AD /* icon-40.png */,
 				7E7966D51810823500FA85AD /* icon-40@2x.png */,
@@ -338,6 +372,7 @@
 				308D05371370CCF300D202BF /* icon-72.png in Resources */,
 				30B4F30119D5E07200D9F7D8 /* Default-736h.png in Resources */,
 				308D05381370CCF300D202BF /* icon.png in Resources */,
+				03C6D2081AAA315400B636FF /* Images.xcassets in Resources */,
 				308D05391370CCF300D202BF /* icon@2x.png in Resources */,
 				302D95F214D2391D003F00A1 /* MainViewController.xib in Resources */,
 				7E7966E01810823500FA85AD /* icon-50.png in Resources */,
@@ -347,6 +382,7 @@
 				3088BBBE154F3926009F9C59 /* Default-Landscape~ipad.png in Resources */,
 				3088BBBF154F3926009F9C59 /* Default-Portrait@2x~ipad.png in Resources */,
 				7E7966E71810823500FA85AD /* icon-small@2x.png in Resources */,
+				03C6D20C1AAA43ED00B636FF /* config.xml in Resources */,
 				3088BBC0154F3926009F9C59 /* Default-Portrait~ipad.png in Resources */,
 				30B4F30019D5E07200D9F7D8 /* Default-667h.png in Resources */,
 				7E7966DE1810823500FA85AD /* icon-40.png in Resources */,
@@ -403,12 +439,28 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		03C6D20E1AAA43ED00B636FF /* config.xml */ = {
+			isa = PBXVariantGroup;
+			children = (
+				03C6D20D1AAA43ED00B636FF /* en */,
+			);
+			name = config.xml;
+			path = ../..;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -431,7 +483,8 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "JP-Energy";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -439,7 +492,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "JP-Energy/JP-Energy-Prefix.pch";
@@ -460,7 +517,8 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "JP-Energy";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
